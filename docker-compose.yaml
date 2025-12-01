@@ -24,6 +24,7 @@ services:
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
+      - ./backend/public/images:/usr/src/app/public/images
     ports:
       - "5000:5000"
     environment:
