@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 
 connectDB();
 app.use(express.json());
-
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/user'));
 app.use('/api/ingredients', require('./routes/ingredients'));
 app.use('/api/recipes', require('./routes/recipe'));

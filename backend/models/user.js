@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
             message: 'User must be at least 18 years old'
         }
     },
-    ingredients: [InventorySchema],
+    inventory: [InventorySchema],
     recipes:  [RecipeSchema]
 }, {
     timestamps: true

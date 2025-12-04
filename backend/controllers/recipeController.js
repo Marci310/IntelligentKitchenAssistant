@@ -92,7 +92,7 @@ const generateRecipe = async (req, res) => {
         let recipeData;
         if(req.file) {
             recipeData = await aiService.generateRecipe(req.file.path, ingredients, isAudio=true);
-            fs.unlinkSync(req.file.path);
+            fs.removeSync(req.file.path);
         } else {
             recipeData = await aiService.generateRecipe(req.body.instructions, ingredients);
         }
@@ -106,9 +106,10 @@ const generateRecipe = async (req, res) => {
         }
         const newRecipe = new Recipe({
             user: req.session.userId,
-            title: recipeData.recipeName,
+            title: recipeData.title,
+            shortDescription: recipeData.shortDescription,
             ingredients: recipeData.ingredients,
-            missingIngredients: recipeData.shoppingList,
+            missingIngredients: recipeData.missingIngredients,
             instructions: recipeData.instructions,
             imageURL: recipeData.imageURL,
         });

@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const IngredientSchema = require('./ingredient');
 
-const InverntorySchema = new mongoose.Schema({
+const InventorySchema = new mongoose.Schema({
     ...IngredientSchema.obj,
     category: {
         type: String,
-        enum: ['Zöldség', 'Gyümölcs', 'Hús', 'Tejtermék', 'Egyéb'],
+        enum: ['Vegetables', 'Fruits', 'Dairies', 'Meats', 'Pastries', 'Spices', 'Cans', 'Other'],
         default: 'Egyéb',
     },
     addedAt: {
@@ -14,4 +14,4 @@ const InverntorySchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Inventory', InverntorySchema);
+module.exports = mongoose.model('Inventory', InventorySchema);

@@ -53,7 +53,8 @@ const PROMPTS = {
         
         Response JSON format ONLY:
         {
-          "recipeName": "String",
+          "title": "String",
+          "shortDescription": "String",
           "ingredients": ["String list of ingredients with quantities"],
           "missingIngredients": ["String list of what needs to be bought"],
           "instructions": ["Step 1", "Step 2"],
@@ -68,14 +69,14 @@ const PROMPTS = {
         Készíts egy JSON listát a hallottak alapján.
         
         A következő kategóriákba sorold be az elemeket (ha nem tudod, legyen 'Egyéb'):
-        [Zöldségek, Gyümölcsök, Tejtermékek, Húsok, Pékáru, Fűszerek, Konzervek, Egyéb]
+        [Vegetables, Fruits, Dairies, Meats, Pastries, Spices, Cans, Other]
         
         Elvárt JSON válasz formátum (Array):
         [
-          { "name": "krumpli", "quantity": "1 kg", "category": "Zöldségek" },
-          { "name": "tej", "quantity": "2 liter", "category": "Tejtermékek" }
+          { "name": "krumpli", "quantity": "1 kg", "category": "Vegetables" },
+          { "name": "tej", "quantity": "2 liter", "category": "Dairies" }
         ]
-        
+            
         Csak tiszta JSON-t adj vissza!
     `
 };

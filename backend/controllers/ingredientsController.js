@@ -78,7 +78,7 @@ const addIngredient = async (req, res) => {
         if (req.file) {
             console.log("Hang feldolgozása...");
             ingredientsToProcess = await aiService.parseIngredientsFromAudio(req.file.path);
-            fs.unlinkSync(req.file.path);
+            fs.removeSync(req.file.path);
         } else {
             ingredientsToProcess.push({
                 name: req.body.name,
@@ -96,8 +96,8 @@ const addIngredient = async (req, res) => {
 
     } catch (error) {
         console.error("Hiba a hozzávaló mentésekor:", error);
-        if (req.file && fs.existsSync(req.file.path)) {
-            fs.unlinkSync(req.file.path);
+        if (req.file && fs.pathExistsSync(req.file.path)) {
+            fs.removeSync(req.file.path);
         }
 
         return res.status(500).json({
