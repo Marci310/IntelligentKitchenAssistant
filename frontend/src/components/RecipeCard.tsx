@@ -1,7 +1,7 @@
 import { Card } from "flowbite-react";
 
 type RecipeProps = {
-    id?: number;
+    id?: string;
     title: string;
     shortDescription: string | undefined;
     imageUrl: string | undefined;

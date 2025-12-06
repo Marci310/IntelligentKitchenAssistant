@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const InventorySchema = require('./inventory');
+const IngredientSchema = require('./ingredient');
 const RecipeSchema = require('./recipe');
 
 const userSchema = new mongoose.Schema({
@@ -39,14 +39,24 @@ const userSchema = new mongoose.Schema({
             message: 'User must be at least 18 years old'
         }
     },
-    inventory: [InventorySchema],
-    recipes:  [RecipeSchema]
+    inventory: {
+        type: [IngredientSchema],
+        default: []
+    },
+    recipes: {
+        type: [RecipeSchema],
+        default: []
+    }
 }, {
     timestamps: true
+}, {
 });
 
 userSchema.set('toJSON', {
     transform: function(doc, ret) {
+        ret.userId = ret._id.toString();
+        delete ret._id;
+        delete ret.__v;
         delete ret.hashedPassword;
         return ret;
     }
@@ -61,4 +71,5 @@ userSchema.statics.hashPassword = async function(password) {
     return bcrypt.hash(password, SALT_ROUNDS);
 };
 
-module.exports = mongoose.model('User', userSchema);
+
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);

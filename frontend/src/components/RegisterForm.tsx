@@ -1,21 +1,24 @@
-import {Button, Label, TextInput, HelperText} from "flowbite-react";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useAuth} from "../context/AuthProvider";
-import {registerFormSchema} from "../schemas/formSchemas";
+import { Button, Label, TextInput, HelperText } from "flowbite-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "../hooks/useAuth";
+import { registerFormSchema } from "../schemas/formSchemas";
+import { useNavigate } from "react-router-dom";
 
 type RegisterFormData = z.infer<typeof registerFormSchema>;
 
 export function RegisterForm() {
-    const {register: registerUser} = useAuth();
-    const {register, handleSubmit, formState: {errors, isSubmitting}} = useForm<RegisterFormData>({
-        resolver: zodResolver(registerFormSchema),
+    const {register:registerUser} = useAuth();
+    const navigate = useNavigate();
+    const {register, handleSubmit, formState:{errors, isSubmitting}} = useForm<RegisterFormData>({
+        resolver:zodResolver(registerFormSchema),
     });
 
     const onSubmit = async (data: RegisterFormData) => {
         try {
             await registerUser(data.username, data.fullName, data.password, data.dateOfBirth);
+            navigate('/login');
         } catch (error) {
             console.error("Registration failed:", error);
         }
@@ -23,7 +26,7 @@ export function RegisterForm() {
 
     return (
         <>
-            <h2>Register</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Register</h2>
             <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     <div className="mb-2 block">
@@ -96,8 +99,11 @@ export function RegisterForm() {
                     </HelperText>}
                 </div>
                 <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Submitting..." : "Submit"}
+                    {isSubmitting ? "Registering..." : "Register"}
                 </Button>
+                <a href="/login" className="text-center text-sm text-blue-600 hover:underline dark:text-blue-500">
+                    Already have an account? Login here.
+                </a>
             </form>
         </>
     );

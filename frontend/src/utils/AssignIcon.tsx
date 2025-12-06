@@ -1,4 +1,10 @@
-export default function assignIcon(category: string) {
+type Category = "Vegetables" | "Fruits" | "Dairies" | "Meats" | "Pastries" | "Spices" | "Cans" | "Other";
+
+interface AssignIconProps {
+    category: Category;
+}
+
+export function AssignIcon({ category }: AssignIconProps) {
     switch (category.toLowerCase()) {
         case "vegetables":
             return <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">

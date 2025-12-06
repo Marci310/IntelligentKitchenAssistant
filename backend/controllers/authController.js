@@ -59,9 +59,10 @@ const register = async (req, res, next) => {
         res.status(201).json({
             message: 'User registered successfully',
             user: {
-                id: user._id,
+                userId: user._id,
                 username: user.username,
                 fullName: user.fullName,
+                dateOfBirth: user.dateOfBirth
             }
         });
     } catch (error) {
@@ -69,34 +70,13 @@ const register = async (req, res, next) => {
     }
 };
 
-const login = async (req, res, next) => {
+const login = async (req, res) => {
     try {
         const { username, password } = req.body;
+        const user = await User.findOne({ username });
 
-        if (!username || !password) {
-            throw new AppError(
-                'Username and password are required',
-                400,
-                'VALIDATION_ERROR'
-            );
-        }
-
-        const user = await User.findOne({ username: username.trim() });
-        if (!user) {
-            throw new AppError(
-                'Invalid username or password',
-                401,
-                'INVALID_CREDENTIALS'
-            );
-        }
-
-        const isPasswordValid = await user.comparePassword(password);
-        if (!isPasswordValid) {
-            throw new AppError(
-                'Invalid username or password',
-                401,
-                'INVALID_CREDENTIALS'
-            );
+        if (!user || !(await user.comparePassword(password))) {
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
 
         req.session.userId = user._id;
@@ -110,27 +90,20 @@ const login = async (req, res, next) => {
             }
         });
     } catch (error) {
-        next(error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
-const logout = async (req, res, next) => {
-    try {
-        req.session.destroy(err => {
-            if (err) {
-                return next(new AppError(
-                    'Failed to log out',
-                    500,
-                    'LOGOUT_FAILED'
-                ));
-            }
-            res.clearCookie('connect.sid');
-            res.json({ message: 'Logged out successfully' });
-        });
-    } catch (error) {
-        next(error);
-    }
-}
+const logout = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ message: 'Logout failed' });
+        }
+        res.clearCookie('connect.sid');
+        res.json({ message: 'Logged out successfully' });
+    });
+};
+
 
 module.exports = {
     register,

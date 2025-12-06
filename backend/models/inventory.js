@@ -1,17 +1,12 @@
 const mongoose = require('mongoose');
-const IngredientSchema = require('./ingredient');
+const ingredientSchema = require('./ingredient');
 
-const InventorySchema = new mongoose.Schema({
-    ...IngredientSchema.obj,
-    category: {
-        type: String,
-        enum: ['Vegetables', 'Fruits', 'Dairies', 'Meats', 'Pastries', 'Spices', 'Cans', 'Other'],
-        default: 'Egyéb',
-    },
+const inventorySchema = new mongoose.Schema({
+    ...ingredientSchema.obj,
     addedAt: {
         type: Date,
         default: Date.now,
     }
 });
 
-module.exports = mongoose.model('Inventory', InventorySchema);
+module.exports = inventorySchema;

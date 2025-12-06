@@ -1,31 +1,30 @@
 import { z } from 'zod';
 
 export const ingredientSchema = z.object({
-    id: z.bigint(),
+    id: z.string(),
     name: z.string().max(150),
-    quantity: z.number().min(0),
+    quantity: z.union([
+        z.string().transform((str) => parseFloat(str)),
+        z.number()
+    ]).pipe(z.number().min(0)),
     unit: z.string(),
+    category: z.enum(['Vegetables', 'Fruits', 'Dairies', 'Meats', 'Pastries', 'Spices', 'Cans', 'Other']),
 });
 
 export const recipeSchema = z.object({
-    id: z.bigint(),
+    id: z.string(),
     title: z.string(),
     shortDescription: z.string().optional(),
     ingredients: z.array(ingredientSchema),
     missingIngredients: z.array(ingredientSchema).optional(),
-    instructions: z.string(),
+    instructions: z.array(z.string()),
     imageUrl: z.string().optional(),
-});
-
-export const inventoryItemSchema = z.object({
-    id: z.bigint(),
-    ingredient: ingredientSchema,
-    category: z.enum(['Vegetables', 'Fruits', 'Dairies', 'Meats', 'Pastries', 'Spices', 'Cans', 'Other']),
+    createdAt: z.string().optional(),
 });
 
 export const userSchema = z.object({
-    userId: z.bigint(),
+    userId: z.string(),
     username: z.string(),
     fullName: z.string(),
-    dateOfBirth: z.date(),
+    dateOfBirth: z.string().transform((str) => new Date(str)),
 });

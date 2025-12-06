@@ -23,3 +23,17 @@ export const loginFormSchema = z.object({
     username: z.string().min(1, "Username is required"),
     password: z.string().min(1, "Password is required"),
 });
+
+export const ingredientFormSchema = z.object({
+    id: z.string(),
+    name: z.string().min(1, "Ingredient name is required").max(150, "Ingredient name must be at most 150 characters"),
+    quantity: z.number().min(0, "Quantity cannot be negative"),
+    unit: z.string().min(1, "Unit is required"),
+    category: z.enum(['Vegetables', 'Fruits', 'Dairies', 'Meats', 'Pastries', 'Spices', 'Cans', 'Other']),
+});
+
+export const profileFormSchema = z.object({
+    username: z.string().min(3, "Username must be at least 3 characters"),
+    fullName: z.string().min(1, "Full name is required"),
+    dateOfBirth: z.string().min(1, "Date of birth is required"),
+});

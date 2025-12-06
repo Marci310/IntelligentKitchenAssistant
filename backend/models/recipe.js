@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 const IngredientSchema = require('./ingredient');
 
 const RecipeSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
     title: { type: String, required: true },
     shortDescription: String,
     ingredients: [IngredientSchema],
@@ -17,6 +12,16 @@ const RecipeSchema = new mongoose.Schema({
     prepTime: String,
     imageUrl: String,
     createdAt: { type: Date, default: Date.now }
+}, {
+    toJSON: {
+        virtuals: true,
+        versionKey: false,
+        transform: function(doc, ret) {
+            ret.id = ret._id.toString();
+            delete ret._id;
+            return ret;
+        }
+    },
 });
 
-module.exports = mongoose.model('Recipe', RecipeSchema);
+module.exports = RecipeSchema;

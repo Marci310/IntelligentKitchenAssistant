@@ -1,21 +1,24 @@
-import {Button, Label, TextInput, HelperText} from "flowbite-react";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useAuth} from "../context/AuthProvider";
-import {loginFormSchema} from "../schemas/formSchemas";
+import { Button, Label, TextInput, HelperText } from "flowbite-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "../hooks/useAuth";
+import { loginFormSchema } from "../schemas/formSchemas";
+import { useNavigate } from "react-router-dom";
 
 type LoginFormData = z.infer<typeof loginFormSchema>;
 
 export function LoginForm() {
     const {login} = useAuth();
-    const {register, handleSubmit, formState: {errors, isSubmitting}} = useForm<LoginFormData>({
-        resolver: zodResolver(loginFormSchema),
+    const navigate = useNavigate();
+    const {register, handleSubmit, formState:{errors, isSubmitting}} = useForm<LoginFormData>({
+        resolver:zodResolver(loginFormSchema),
     });
 
     const onSubmit = async (data: LoginFormData) => {
         try {
             await login(data.username, data.password);
+            navigate('/recipes');
         } catch (error) {
             console.error("Login failed:", error);
         }
@@ -23,7 +26,7 @@ export function LoginForm() {
 
     return (
         <>
-            <h2>Login</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Login</h2>
             <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     <div className="mb-2 block">
@@ -54,8 +57,11 @@ export function LoginForm() {
                     </HelperText>}
                 </div>
                 <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Logging in..." : "Submit"}
+                    {isSubmitting ? "Logging in..." : "Login"}
                 </Button>
+                <a href="/register" className="text-center text-sm text-blue-600 hover:underline dark:text-blue-500">
+                    Don't have an account? Register here.
+                </a>
             </form>
         </>
     );

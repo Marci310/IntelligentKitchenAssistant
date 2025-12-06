@@ -10,6 +10,8 @@ import {
     NavbarLink,
     NavbarToggle,
 } from "flowbite-react";
+import { useUser } from "../hooks/useUser.ts";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type NavbarProps = {
     name: string;
@@ -17,23 +19,33 @@ type NavbarProps = {
 }
 
 export function NavBar(props: NavbarProps) {
-const monogram = (props.name || '')
-            .split(' ')
-            .map((n) => n[0] ?? '')
-            .join('')
-            .toUpperCase()
-            .slice(0, 2);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { logout } = useUser();
+
+    const monogram = (props.name || '')
+        .split(' ')
+        .map((n) => n[0] ?? '')
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+
+    const logoutUser = async () => {
+        await logout();
+        navigate('/login');
+    };
     return (
-        <Navbar fluid rounded>
+       <Navbar fluid rounded>
             <NavbarBrand href="/">
-                <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Intelligent Kitchen Assistant</span>
+                <img src="/logo2.png" className="mr-3 h-8 sm:h-9" alt="IKA Logo"/>
+                <span className="text-3xl self-center whitespace-nowrap font-semibold dark:text-white">Intelligent Chef</span>
             </NavbarBrand>
             <div className="flex md:order-2">
                 <Dropdown
                     arrowIcon={false}
                     inline
                     label={
-                        <Avatar placeholderInitials={monogram} rounded />
+                        <Avatar placeholderInitials={monogram} rounded/>
                     }
                 >
                     <DropdownHeader>
@@ -41,16 +53,18 @@ const monogram = (props.name || '')
                         <span className="block truncate text-sm font-medium">{props.email}</span>
                     </DropdownHeader>
                     <DropdownItem href="/profile">Profile</DropdownItem>
-                    <DropdownDivider />
-                    <DropdownItem href="/logout">Sign out</DropdownItem>
+                    <DropdownDivider/>
+                    <DropdownItem onClick={logoutUser}>Sign out</DropdownItem>
                 </Dropdown>
-                <NavbarToggle />
+                <NavbarToggle/>
             </div>
             <NavbarCollapse>
-                <NavbarLink href="/recipes" active>
+                <NavbarLink className="text-xl" href="/recipes" active={location.pathname.startsWith('/recipes')}>
                     Recipes
                 </NavbarLink>
-                <NavbarLink href="/inventory">Inventory</NavbarLink>
+                <NavbarLink className="text-xl" href="/inventory" active={location.pathname === '/inventory'}>
+                    Inventory
+                </NavbarLink>
             </NavbarCollapse>
         </Navbar>
     );

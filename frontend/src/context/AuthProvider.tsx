@@ -1,7 +1,8 @@
-import React, { createContext, useContext, type ReactNode } from 'react';
+import React, { createContext, type ReactNode, useEffect } from 'react';
 import { z } from 'zod';
 import { userSchema } from '../schemas/backendSchemas';
-import { useUser } from "../hooks/useUser.ts";
+import { useUser } from '../hooks/useUser';
+import { useQueryClient } from "@tanstack/react-query";
 
 type User = z.infer<typeof userSchema>;
 
@@ -14,15 +15,7 @@ interface AuthContextType {
     isLoading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider');
-    }
-    return context;
-};
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
     children: ReactNode;

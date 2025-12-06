@@ -29,7 +29,6 @@ services:
       - "5000:5000"
     environment:
       - NODE_ENV=development
-      - MONGODB_URI=mongodb://admin:password@mongodb:27017/myapp?authSource=admin
     depends_on:
       - mongodb
     command: npm run dev
