@@ -41,27 +41,29 @@ export default function Recipe() {
                     </svg>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <p className="text-gray-700 dark:text-gray-400">
-                        {recipe.shortDescription}
-                    </p>
+                    <div className="mb-6 order-2 md:order-1">
+                        <p className="text-gray-700 dark:text-gray-400 mb-6">
+                            {recipe.shortDescription}
+                        </p>
+                        <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
+                            Ingredients
+                        </h2>
+                        <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-400">
+                            {recipe.ingredients.map((ingredient, index) => (
+                                <li key={index}>
+                                    {ingredient.quantity} {ingredient.unit} - {ingredient.name}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
                     <img
-                        className="rounded-lg shadow-md w-full h-auto object-cover"
-                        src={recipe.imageUrl}
+                        className="w-96 h-96 rounded-lg shadow-md object-cover order-1 md:order-2"
+                        src={`http://localhost:5000${recipe.imageUrl}`}
                         alt={`${recipe.title} image`}
                     />
                 </div>
-                <div className="mb-6">
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
-                        Ingredients
-                    </h2>
-                    <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-400">
-                        {recipe.ingredients.map((ingredient, index) => (
-                            <li key={index}>
-                                {ingredient.quantity} {ingredient.unit} - {ingredient.name}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
                         Instructions

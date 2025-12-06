@@ -12,7 +12,7 @@ export function RecipeCard(props: RecipeProps) {
         <Card
             className="max-w-sm"
             imgAlt="Recipe Image"
-            imgSrc={props.imageUrl}
+            imgSrc={`http://localhost:5000${props.imageUrl}`}
             href={`/recipes/${props.id}`}
         >
             <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">

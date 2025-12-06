@@ -36,62 +36,64 @@ export function IngredientCard(ingredient: Ingredient) {
         <div className="border rounded-lg p-4 shadow-md w-full">
             {editMode ? (
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="flex items-start gap-4">
-                        <div className="flex-1">
-                            <Label htmlFor="name">Name</Label>
-                            <TextInput
-                                id="name"
-                                {...register("name")}
-                                color={errors.name ? "failure" : undefined}
-                            />
-                            {errors.name?.message && <HelperText>
-                                <span className="font-medium">{errors.name?.message}</span>
-                            </HelperText>}
+                    <div className="flex flex-wrap items-start gap-4">
+                        <div className="flex flex-wrap md:flex-nowrap gap-4 w-full">
+                            <div className="flex-1 min-w-[150px]">
+                                <Label htmlFor="name">Name</Label>
+                                <TextInput
+                                    id="name"
+                                    {...register("name")}
+                                    color={errors.name ? "failure" : undefined}
+                                />
+                                {errors.name?.message && <HelperText>
+                                    <span className="font-medium">{errors.name?.message}</span>
+                                </HelperText>}
+                            </div>
+                            <div className="flex-1 min-w-[150px]">
+                                <Label htmlFor="quantity">Quantity</Label>
+                                <TextInput
+                                    id="quantity"
+                                    type="number"
+                                    step={0.0001}
+                                    {...register("quantity", {valueAsNumber:true})}
+                                    color={errors.quantity ? "failure" : undefined}
+                                />
+                                {errors.quantity?.message && <HelperText>
+                                    <span className="font-medium">{errors.quantity?.message}</span>
+                                </HelperText>}
+                            </div>
+                            <div className="flex-1 min-w-[150px]">
+                                <Label htmlFor="unit">Unit</Label>
+                                <TextInput
+                                    id="unit"
+                                    {...register("unit")}
+                                    color={errors.unit ? "failure" : undefined}
+                                />
+                                {errors.unit?.message && <HelperText>
+                                    <span className="font-medium">{errors.unit?.message}</span>
+                                </HelperText>}
+                            </div>
+                            <div className="flex-1 min-w-[150px]">
+                                <Label htmlFor="category">Category</Label>
+                                <Select
+                                    id="category"
+                                    {...register("category")}
+                                >
+                                    <option value="Vegetables">Vegetables</option>
+                                    <option value="Fruits">Fruits</option>
+                                    <option value="Dairies">Dairies</option>
+                                    <option value="Meats">Meats</option>
+                                    <option value="Pastries">Pastries</option>
+                                    <option value="Spices">Spices</option>
+                                    <option value="Cans">Cans</option>
+                                    <option value="Other">Other</option>
+                                </Select>
+                                {errors.category?.message && <HelperText>
+                                    <span className="font-medium">{errors.category?.message}</span>
+                                </HelperText>}
+                            </div>
                         </div>
-                        <div className="flex-1">
-                            <Label htmlFor="quantity">Quantity</Label>
-                            <TextInput
-                                id="quantity"
-                                type="number"
-                                step={0.0001}
-                                {...register("quantity", {valueAsNumber:true})}
-                                color={errors.quantity ? "failure" : undefined}
-                            />
-                            {errors.quantity?.message && <HelperText>
-                                <span className="font-medium">{errors.quantity?.message}</span>
-                            </HelperText>}
-                        </div>
-                        <div className="flex-1">
-                            <Label htmlFor="unit">Unit</Label>
-                            <TextInput
-                                id="unit"
-                                {...register("unit")}
-                                color={errors.unit ? "failure" : undefined}
-                            />
-                            {errors.unit?.message && <HelperText>
-                                <span className="font-medium">{errors.unit?.message}</span>
-                            </HelperText>}
-                        </div>
-                        <div className="flex-1">
-                            <Label htmlFor="category">Category</Label>
-                            <Select
-                                id="category"
-                                {...register("category")}
-                            >
-                                <option value="Vegetables">Vegetables</option>
-                                <option value="Fruits">Fruits</option>
-                                <option value="Dairies">Dairies</option>
-                                <option value="Meats">Meats</option>
-                                <option value="Pastries">Pastries</option>
-                                <option value="Spices">Spices</option>
-                                <option value="Cans">Cans</option>
-                                <option value="Other">Other</option>
-                            </Select>
-                            {errors.category?.message && <HelperText>
-                                <span className="font-medium">{errors.category?.message}</span>
-                            </HelperText>}
-                        </div>
-                        <div className="flex gap-2 pt-6">
+                        <div className="flex gap-2 pt-2 md:pt-6 w-full md:w-auto justify-end">
                             <Button type="submit" disabled={isSubmitting}>
                                 {isSubmitting ? "Saving..." : "Save"}
                             </Button>
@@ -102,18 +104,19 @@ export function IngredientCard(ingredient: Ingredient) {
                     </div>
                 </form>
             ) : (
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-5">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-5">
                         {ingredient.id != "0" ?
                             (<>
                                 <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">{ingredient.name}</h3>
                                 <p className="text-gray-600 dark:text-gray-400">Quantity: {ingredient.quantity} {ingredient.unit}</p>
-                                <AssignIcon category={ingredient.category} />
+                                <AssignIcon category={ingredient.category}/>
                             </>)
                             :
-                            (<h3 className="text-xl font-semibold text-gray-500 dark:text-gray-400 ">Add New Ingredient</h3>)}
+                            (<h3 className="text-xl font-semibold text-gray-500 dark:text-gray-400 ">Add New
+                                Ingredient</h3>)}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 self-end md:self-center">
                         {ingredient.id != "0" ?
                             (<>
                                 <Button onClick={() => setEditMode(true)}>

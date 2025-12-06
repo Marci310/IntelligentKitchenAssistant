@@ -123,13 +123,9 @@ exports.generateRecipe = async (input, ingredients, isAudio = false) => {
 exports.generateImage = async (prompt) => {
     try {
         const response = await ai.models.generateContent({
-            model: "imagen-3.0-generate-001",
-            contents: {role: 'user', parts: [{text: `Create a picture: ${prompt}`}]},
-            config: {responseModalities: "Image"}
+            model: "gemini-2.5-flash-image",
+            contents: prompt,
         });
-        console.log("Full response:", JSON.stringify(response, null, 2));
-        console.log("Candidates:", response.candidates);
-        console.log("Parts:", response.candidates?.[0]?.content?.parts);
 
         for (const part of response.candidates[0].content.parts) {
             if (part.inlineData) {

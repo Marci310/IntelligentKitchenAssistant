@@ -17,10 +17,12 @@ export function RecipeGeneration({openModal, setOpenModal}: RecipeGenerationProp
     const [isSubmitting, setIsSubmitting] = useState(false);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
+    const isCancelledRef = useRef(false);
     const navigate = useNavigate();
 
     const startRecording = async () => {
         try {
+            isCancelledRef.current = false;
             const stream = await navigator.mediaDevices.getUserMedia({audio:true});
             const mediaRecorder = new MediaRecorder(stream);
             mediaRecorderRef.current = mediaRecorder;
@@ -31,9 +33,13 @@ export function RecipeGeneration({openModal, setOpenModal}: RecipeGenerationProp
             };
 
             mediaRecorder.onstop = async () => {
+                stream.getTracks().forEach(track => track.stop());
+                if (isCancelledRef.current) {
+                    toast.info("Recording cancelled.");
+                    return;
+                }
                 const audioBlob = new Blob(audioChunksRef.current, {type:'audio/mp3'});
                 await sendAudioToBackend(audioBlob);
-                stream.getTracks().forEach(track => track.stop());
             };
 
             mediaRecorder.start();
@@ -46,6 +52,14 @@ export function RecipeGeneration({openModal, setOpenModal}: RecipeGenerationProp
 
     const stopRecording = () => {
         if (mediaRecorderRef.current && isRecording) {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+        }
+    };
+
+    const cancelRecording = () => {
+        if (mediaRecorderRef.current && isRecording) {
+            isCancelledRef.current = true;
             mediaRecorderRef.current.stop();
             setIsRecording(false);
         }
@@ -167,7 +181,13 @@ export function RecipeGeneration({openModal, setOpenModal}: RecipeGenerationProp
                             </svg>
                             {isRecording ? " Stop Recording" : " Start Recording"}
                         </Button>
-                        <Button color="alternative" onClick={() => setAsr(false)} disabled={isRecording || isSubmitting}>
+                        {isRecording && (
+                            <Button color="red" onClick={cancelRecording} disabled={isSubmitting}>
+                                Cancel
+                            </Button>
+                        )}
+                        <Button color="alternative" onClick={() => setAsr(false)}
+                                disabled={isRecording || isSubmitting}>
                             I want to type
                         </Button>
                     </>
